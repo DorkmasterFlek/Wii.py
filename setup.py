@@ -9,7 +9,7 @@ with open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(name="Wii.py",
-      version='0.1',
+      version='0.2',
       description="Wii library written in and for Python",
       url='https://github.com/DorkmasterFlek/Wii.py',
       author="Xuzz, SquidMan, megazig, Matt_P, Omega, The Lemon Man, marcan, Daeken",
