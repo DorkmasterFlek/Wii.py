@@ -17,7 +17,9 @@ except ImportError:
     # Fall back to Python 2
     from urllib2 import urlopen
 
-from Crypto.Cipher import AES
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives import padding
+from cryptography.hazmat.backends import default_backend
 
 
 def align(x, boundary):
@@ -64,21 +66,28 @@ def hexdump2(src, length = 16): # dumps to a "hex editor" style output
 class Crypto(object):
     """This is a Cryptographic/hash class used to abstract away things (to make changes easier)"""
     align = 64
+    AES_BLOCK_SIZE_BYTES = 16
+    CRYPTO_BACKEND = default_backend()
 
     def decryptData(self, key, iv, data, align = True):
-        """Decrypts some data (aligns to 64 bytes, if needed)."""
-        if((len(data) % self.align) != 0 and align):
-            return AES.new(key, AES.MODE_CBC, iv).decrypt(data + (b"\x00" * (self.align - (len(data) % self.align))))
-        else:
-            return AES.new(key, AES.MODE_CBC, iv).decrypt(data)
+        AES_CBC_CIPHER = Cipher(algorithms.AES(key), modes.CBC(iv), backend=CRYPTO_BACKEND)
+        decryptor = AES_CBC_CIPHER.decryptor()
+        padder = padding.PKCS7(self.AES_BLOCK_SIZE_BYTES*8).padder()
+        padded_data = padder.update(date)
+        padded_data += padder.finalize()
+        decryptor().update(padded_data)
+        return decryptor.finalize()
     decryptData = classmethod(decryptData)
 
     def encryptData(self, key, iv, data, align = True):
         """Encrypts some data (aligns to 64 bytes, if needed)."""
-        if((len(data) % self.align) != 0 and align):
-            return AES.new(key, AES.MODE_CBC, iv).encrypt(data + (b"\x00" * (self.align - (len(data) % self.align))))
-        else:
-            return AES.new(key, AES.MODE_CBC, iv).encrypt(data)
+        AES_CBC_CIPHER = Cipher(algorithms.AES(key), modes.CBC(iv), backend=CRYPTO_BACKEND)
+        encryptor = AES_CBC_CIPHER.encryptor()
+        padder = padding.PKCS7(self.AES_BLOCK_SIZE_BYTES*8).padder()
+        padded_data = padder.update(date)
+        padded_data += padder.finalize()
+        encryptor.update(padded_data)
+        return encryptor.finalize()
     encryptData = classmethod(encryptData)
 
     def decryptContent(self, titlekey, idx, data):

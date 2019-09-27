@@ -20,7 +20,7 @@ setup(name="Wii.py",
       python_requires=">=2.7, >=3.3",
       long_description=long_description,
       packages=["Wii"],
-      install_requires=['pycrypto', 'Pillow'],
+      install_requires=['cryptography', 'Pillow'],
       extras_require={
           'GUI': ["wxPython"],
       },
