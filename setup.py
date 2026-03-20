@@ -9,7 +9,7 @@ with open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(name="Wii.py",
-      version='0.1',
+      version='0.3',
       description="Wii library written in and for Python",
       url='https://github.com/DorkmasterFlek/Wii.py',
       author="Xuzz, SquidMan, megazig, Matt_P, Omega, The Lemon Man, marcan, Daeken",
@@ -20,7 +20,7 @@ setup(name="Wii.py",
       python_requires=">=2.7, >=3.3",
       long_description=long_description,
       packages=["Wii"],
-      install_requires=['pycrypto', 'Pillow'],
+      install_requires=['pycryptodome', 'Pillow'],
       extras_require={
           'GUI': ["wxPython"],
       },
